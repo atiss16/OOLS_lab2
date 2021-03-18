@@ -16,6 +16,7 @@ namespace DucksPond.Ducks
         {
             this.quackBehavior = new QuackSqueak();
             this.flyBehavior = new FlyWithWings();
+            this.swimBehavior = new SwimDefault();
         }
     }
 }

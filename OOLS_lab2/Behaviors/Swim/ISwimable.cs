@@ -9,7 +9,7 @@ namespace DucksPond.Behaviors.Swim
     /// <summary>
     /// Интерфейс плавания
     /// </summary>
-    interface ISwimable 
+    public interface ISwimable 
     {
         /// <summary>
         /// Метод плавания

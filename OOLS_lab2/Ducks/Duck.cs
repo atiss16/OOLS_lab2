@@ -9,6 +9,8 @@ namespace DucksPond.Ducks
     {
         public IFlyable flyBehavior;
         public IQuackable quackBehavior;
+        public ISwimable swimBehavior;
+
         protected abstract string Name { get; }
         public void PerformQuack() 
         {
@@ -17,6 +19,11 @@ namespace DucksPond.Ducks
         public void PerformFly()
         {
             flyBehavior.Fly();
+        }
+
+        public void PerformSwim()
+        {
+            swimBehavior.Swim();
         }
 
         public void Display()

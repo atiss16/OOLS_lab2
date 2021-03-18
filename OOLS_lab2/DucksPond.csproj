@@ -48,6 +48,7 @@
     <Compile Include="Behaviors\Fly\IFlyable.cs" />
     <Compile Include="Behaviors\Quack\IQuackable.cs" />
     <Compile Include="Behaviors\Quack\QuackDefault.cs" />
+    <Compile Include="Behaviors\Quack\QuackNoWay.cs" />
     <Compile Include="Behaviors\Quack\QuackSqueak.cs" />
     <Compile Include="Behaviors\Swim\ISwimable.cs" />
     <Compile Include="Behaviors\Swim\SwimDefault.cs" />
@@ -56,7 +57,9 @@
     <Compile Include="Ducks\Duck.cs" />
     <Compile Include="Ducks\MallardDuck.cs" />
     <Compile Include="Ducks\RedHeadDuck.cs" />
+    <Compile Include="Ducks\RoastDuck.cs" />
     <Compile Include="Ducks\RubberDuck.cs" />
+    <Compile Include="Ducks\WoodenDuck.cs" />
     <Compile Include="Fixtures\DuckDecoy.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -6,14 +6,14 @@ using DucksPond.Behaviors.Swim;
 namespace DucksPond.Ducks
 {
     /// <summary>
-    /// Резиновая утка
+    /// Деревянная утка
     /// </summary>
-    public class RubberDuck : Duck
+    public class WoodenDuck : Duck
     {
-        protected override string Name => "RubberDuck";
-        RubberDuck()
+        protected override string Name => "WoodenDuck";
+        WoodenDuck()
         {
-            this.quackBehavior = new QuackSqueak();
+            this.quackBehavior = new QuackNoWay(); 
             this.flyBehavior = new FlyNoWay();
             this.swimBehavior = new SwimOnTheFlow();
         }
