@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace DucksPond.Behaviors.Fly
 {
-    public class FlyNoWay : IFlyable
+    /// <summary>
+    /// поведение для уток, которые не летают
+    /// </summary>
+    public class FlyNoWay : IFlyable 
     {
         public void Fly()
         {

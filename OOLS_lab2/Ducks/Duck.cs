@@ -11,11 +11,11 @@ namespace DucksPond.Ducks
 {
     public abstract class Duck
     {
-        public IFlyable flyBehavior;
+        public IFlyable flyBehavior; //наследуются всеми субклассами Duck
         public IQuackable quackBehavior;
-        public void PerformQuack()
+        public void PerformQuack() 
         {
-            quackBehavior.Quack();
+            quackBehavior.Quack();  // делегирование операции классам поведения
         }
         public void PerformFly()
         {

@@ -6,16 +6,16 @@ using DucksPond.Behaviors.Swim;
 
 namespace DucksPond.Ducks
 {
-    public class ReadHeadDuck : Duck
+    public class RedHeadDuck : Duck
     {
-        ReadHeadDuck()
+        RedHeadDuck()
         {
             this.quackBehavior = new QuackSqueak();
             this.flyBehavior = new FlyWithWings();
         }
         public new void Display()
         {
-            Console.WriteLine("ReadHeadDuck display");
+            Console.WriteLine("RedHeadDuck display");
         }
     }
 }

@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace DucksPond.Behaviors.Quack
 {
+    /// <summary>
+    /// поведение для уток, которые крякают
+    /// </summary>
     public class QuackDefault : IQuackable
     {
-        public void Quack()
+        public void Quack() 
         {
             Console.WriteLine("Quack!!!");
         }

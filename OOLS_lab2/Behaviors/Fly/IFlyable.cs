@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace DucksPond.Behaviors.Fly
 {
-    public interface IFlyable
+    /// <summary>
+    /// Интерфейс для летающих уток
+    /// </summary>
+    public interface IFlyable 
     {
+        /// <summary>
+        /// метод полета
+        /// </summary>
         void Fly();
     }
 }

@@ -55,7 +55,7 @@
     <Compile Include="Behaviors\Swim\SwimSink.cs" />
     <Compile Include="Ducks\Duck.cs" />
     <Compile Include="Ducks\MallardDuck.cs" />
-    <Compile Include="Ducks\ReadHeadDuck.cs" />
+    <Compile Include="Ducks\RedHeadDuck.cs" />
     <Compile Include="Ducks\RubberDuck.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

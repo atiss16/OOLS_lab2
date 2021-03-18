@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace DucksPond.Behaviors.Swim
 {
     /// <summary>
-    /// Интерфейс плавания
+    /// Интерфейс плавания, реализуется всеми классами
     /// </summary>
-    interface ISwimable
+    interface ISwimable 
     {
         /// <summary>
         /// Метод плавания

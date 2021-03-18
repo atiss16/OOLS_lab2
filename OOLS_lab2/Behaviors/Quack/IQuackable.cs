@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace DucksPond.Behaviors.Quack
 {
-    public interface IQuackable
+    /// <summary>
+    /// Интерфейс кряканья
+    /// </summary>
+    public interface IQuackable 
     {
+        /// <summary>
+        /// метод кряканья
+        /// </summary>
         void Quack();
     }
 }
