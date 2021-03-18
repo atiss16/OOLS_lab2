@@ -5,6 +5,9 @@ using DucksPond.Behaviors.Swim;
 
 namespace DucksPond.Ducks
 {
+    /// <summary>
+    /// Резиновая утка
+    /// </summary>
     public class RubberDuck : Duck
     {
         protected override string Name => "RubberDuck";

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DucksPond.Behaviors.Fly;
 using DucksPond.Behaviors.Quack;
 using DucksPond.Behaviors.Swim;

@@ -6,6 +6,9 @@ using DucksPond.Behaviors.Swim;
 
 namespace DucksPond.Ducks
 {
+    /// <summary>
+    /// Красноголовая утка
+    /// </summary>
     public class RedHeadDuck : Duck
     {
         protected override string Name => "ReadHead";
