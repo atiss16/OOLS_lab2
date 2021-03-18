@@ -7,14 +7,11 @@ namespace DucksPond.Ducks
 {
     public class MallardDuck : Duck
     {
+        protected override string Name => "MallardDuck";
         MallardDuck()
         {
             this.quackBehavior = new QuackDefault();
             this.flyBehavior = new FlyWithWings();
-        }
-        public new void Display()
-        {
-            Console.WriteLine("MallardDuck display");
         }
     }
 }

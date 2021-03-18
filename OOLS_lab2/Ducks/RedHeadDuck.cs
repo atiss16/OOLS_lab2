@@ -8,14 +8,11 @@ namespace DucksPond.Ducks
 {
     public class RedHeadDuck : Duck
     {
+        protected override string Name => "ReadHead";
         RedHeadDuck()
         {
             this.quackBehavior = new QuackSqueak();
             this.flyBehavior = new FlyWithWings();
-        }
-        public new void Display()
-        {
-            Console.WriteLine("RedHeadDuck display");
         }
     }
 }

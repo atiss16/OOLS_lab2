@@ -11,21 +11,21 @@ namespace DucksPond.Ducks
 {
     public abstract class Duck
     {
-        public IFlyable flyBehavior; //наследуются всеми субклассами Duck
+        public IFlyable flyBehavior;
         public IQuackable quackBehavior;
+        protected abstract string Name { get; }
         public void PerformQuack() 
         {
-            quackBehavior.Quack();  // делегирование операции классам поведения
+            quackBehavior.Quack();
         }
         public void PerformFly()
         {
             flyBehavior.Fly();
         }
 
-        //нада решить что делац
         public void Display()
         {
-
+            Console.WriteLine($"{Name} display");
         }
     }
 }
