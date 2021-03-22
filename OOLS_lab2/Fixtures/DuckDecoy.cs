@@ -10,7 +10,7 @@ namespace DucksPond.Fixtures
     /// </summary>
     public class DuckDecoy
     {
-        public IQuackable quackBehavior;
+        protected IQuackable quackBehavior;
         public DuckDecoy()
         {
             this.quackBehavior = new QuackDefault();

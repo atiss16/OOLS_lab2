@@ -7,9 +7,9 @@ namespace DucksPond.Ducks
 {
     public abstract class Duck
     {
-        public IFlyable flyBehavior;
-        public IQuackable quackBehavior;
-        public ISwimable swimBehavior;
+        protected IFlyable flyBehavior;
+        protected IQuackable quackBehavior;
+        protected ISwimable swimBehavior;
 
         protected abstract string Name { get; }
         public void PerformQuack() 

@@ -12,7 +12,7 @@ namespace DucksPond.Ducks
     public class RedHeadDuck : Duck
     {
         protected override string Name => "ReadHead";
-        RedHeadDuck()
+        public RedHeadDuck()
         {
             this.quackBehavior = new QuackSqueak();
             this.flyBehavior = new FlyWithWings();

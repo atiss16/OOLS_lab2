@@ -11,7 +11,7 @@ namespace DucksPond.Ducks
     public class RubberDuck : Duck
     {
         protected override string Name => "RubberDuck";
-        RubberDuck()
+        public RubberDuck()
         {
             this.quackBehavior = new QuackSqueak();
             this.flyBehavior = new FlyNoWay();
