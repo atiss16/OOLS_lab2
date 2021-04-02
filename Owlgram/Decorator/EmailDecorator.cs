@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Owlgram.GameObjects;
 using Owlgram.Observable;
+using Owlgram.GameRoles;
 
 namespace Owlgram.Decorator
 {
@@ -15,10 +16,10 @@ namespace Owlgram.Decorator
 
         }
 
-        public override void Send(Post post, IObserver observer)
+        public override void Send(Post post, Mouse mouse)
         {
-            this.Notifier.Send(post, observer);
-            Console.WriteLine("Email уведомление:");
+            this.Notifier.Send(post, mouse);
+            Console.WriteLine(mouse + " уведомлена по Email");
         }
     }
 }

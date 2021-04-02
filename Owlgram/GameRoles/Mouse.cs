@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Owlgram.GameObjects;
+using Owlgram.Observable;
+
 
 namespace Owlgram.GameRoles
 {
-    public class Mouse
+    public class Mouse : IObserver
     {
         //метод смерти
         public void IsDead()
