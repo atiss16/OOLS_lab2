@@ -48,17 +48,17 @@ namespace Owlgram.GameRoles
                 Satiety -= 10;
         }
 
-        void IPublisher.RegisterObserver(IObserver observer)
+        public void RegisterObserver(IObserver observer)
         {
             Observers.Add(observer);
         }
 
-        void IPublisher.RemoveObserver(IObserver observer)
+        public void RemoveObserver(IObserver observer)
         {
             Observers.Remove(observer);
         }
 
-        void IPublisher.NotifyObserver(IObserver observer, Post post)
+        public void NotifyObserver(IObserver observer, Post post)
         {
             observer.Update(this, post);
         }
