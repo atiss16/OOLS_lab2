@@ -19,7 +19,7 @@ namespace Owlgram.Decorator
         public override void Send(Post post, Mouse mouse)
         {
             this.Notifier.Send(post, mouse);
-            Console.WriteLine(mouse + " уведомлена по Telegram");
+            Console.WriteLine(mouse.Name + " уведомлена по Telegram");
         }
     }
 }

@@ -49,9 +49,11 @@
     <Compile Include="Decorator\TelegramDecorator.cs" />
     <Compile Include="Decorator\ViberDecorator.cs" />
     <Compile Include="Decorator\WhatsAppDecorator.cs" />
+    <Compile Include="Game\GameController.cs" />
     <Compile Include="GameObjects\Post.cs" />
     <Compile Include="GameRoles\Mouse.cs" />
     <Compile Include="GameRoles\Owl.cs" />
+    <Compile Include="GameRoles\User.cs" />
     <Compile Include="Observable\IObserver.cs" />
     <Compile Include="Observable\IPublisher.cs" />
     <Compile Include="Program.cs" />
