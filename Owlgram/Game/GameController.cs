@@ -16,20 +16,21 @@ namespace Owlgram.Game
         public List<User> Users = new List<User>();
         private Timer timerOwlNonEating= new Timer(30000.0);//30 seconds
         private Timer timerOwlNonPosting = new Timer(30000.0);//30 seconds
-        private const int postingAmuletTime = 1;//minutes
+        private const int postingAmuletTime = 1;//время сохранения показателей в минутах
+
         public GameController()
         {
-            timerOwlNonEating.Elapsed += new ElapsedEventHandler(timerOwlNonEatingPunish);
+            timerOwlNonEating.Elapsed += new ElapsedEventHandler(TimerOwlNonEatingPunish);
             timerOwlNonEating.Start();
 
-            timerOwlNonPosting.Elapsed += new ElapsedEventHandler(timerOwlNonPostingPunish);
+            timerOwlNonPosting.Elapsed += new ElapsedEventHandler(TimerOwlNonPostingPunish);
             timerOwlNonPosting.Start();
 
             //timerNonPosting.Stop();
             //timerNonPosting.Dispose();
         }
 
-        private void timerOwlNonPostingPunish(object sender, ElapsedEventArgs e)
+        private void TimerOwlNonPostingPunish(object sender, ElapsedEventArgs e)
         {
             foreach(User user in Users)
             {
@@ -50,7 +51,7 @@ namespace Owlgram.Game
             }
         }
 
-        private void timerOwlNonEatingPunish(object sender, ElapsedEventArgs e)
+        private void TimerOwlNonEatingPunish(object sender, ElapsedEventArgs e)
         {
             foreach (User user in Users)
             {
@@ -81,7 +82,7 @@ namespace Owlgram.Game
             string response = Console.ReadLine();
             int itemNum = 0;
 
-            if (itemNum > 2 || !int.TryParse(response, out itemNum))
+            if (itemNum > 2 && !int.TryParse(response, out itemNum))
             {
                 Console.WriteLine("No such menu item");
                 MainMenu();
@@ -108,7 +109,6 @@ namespace Owlgram.Game
             string name = Console.ReadLine();
             Console.WriteLine("Password:");
             string pass = Console.ReadLine();
-
 
             User user = Users.FirstOrDefault(u => u.Password == pass && u.Name == name);
             if (user == null)
@@ -163,7 +163,7 @@ namespace Owlgram.Game
                     return;
                 }
             }
-            if (rnd.Next(1, 2) == 1)
+            if (rnd.Next(1, 3) == 1)
             {
                 Owl owl = new Owl(name, pas, photo, geo);
                 Users.Add(owl);
@@ -193,7 +193,7 @@ namespace Owlgram.Game
                 string response = Console.ReadLine();
                 int itemNum = 0;
 
-                if (itemNum > 2 || !int.TryParse(response, out itemNum))
+                if (itemNum > 4 && !int.TryParse(response, out itemNum))
                 {
                     Console.WriteLine("No such menu item");
                     continue;
@@ -228,7 +228,7 @@ namespace Owlgram.Game
             Console.WriteLine($"    Eaten mice count: {owl.EatenMiceCount}");
         }
 
-        private void Hunt(Owl owl)
+        private void Hunt(Owl owl) //охота
         {
             Console.WriteLine("Let's check your targets!");
             List<Mouse> pretendentsToEat = owl.Observers;
@@ -289,7 +289,7 @@ namespace Owlgram.Game
                 string response = Console.ReadLine();
                 int itemNum = 0;
 
-                if (itemNum > 8 || !int.TryParse(response, out itemNum))
+                if (itemNum > 8 && !int.TryParse(response, out itemNum))
                 {
                     Console.WriteLine("No such menu item");
                     MouseMenu(mouse);
@@ -347,7 +347,7 @@ namespace Owlgram.Game
                     notSubscriptionOwls.Add((Owl)userOwl);
             }
 
-            if(notSubscriptionOwls.Count ==0)
+            if(notSubscriptionOwls.Count == 0)
             {
                 Console.WriteLine("No owl for subscribe :(");
                 return;
@@ -363,7 +363,7 @@ namespace Owlgram.Game
             string response = Console.ReadLine();
             int itemNum = 0;
 
-            if (itemNum > owls.Count() || !int.TryParse(response, out itemNum))
+            if (itemNum > owls.Count() && !int.TryParse(response, out itemNum))
             {
                 Console.WriteLine("No such owl");
                 SelectNewOwlToSubscribe(mouse);
@@ -397,9 +397,9 @@ namespace Owlgram.Game
                 return;
             }
 
-            for(int i=0;i<unlikedPosts.Count;i++)
+            for (int i = 0; i < unlikedPosts.Count; i++)
             {
-                Console.Write($"{i+1}:    ");
+                Console.Write($"{i + 1}:    ");
                 Console.WriteLine($"Text: {unlikedPosts[i].Text}  Photo: {unlikedPosts[i].Photo}  Geo: {unlikedPosts[i].Geo}");
             }
 
@@ -418,7 +418,7 @@ namespace Owlgram.Game
                     return;
                 }
 
-                if (itemNum > unlikedPosts.Count() || !int.TryParse(response, out itemNum))
+                if (itemNum > unlikedPosts.Count() && !int.TryParse(response, out itemNum))
                 {
                     Console.WriteLine("No such post");
                     continue;

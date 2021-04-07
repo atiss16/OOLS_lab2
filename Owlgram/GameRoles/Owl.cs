@@ -23,6 +23,7 @@ namespace Owlgram.GameRoles
         {
 
         }
+
         public Owl(string name, string password, string geo ="", string photo="")
         {
             Name = name;

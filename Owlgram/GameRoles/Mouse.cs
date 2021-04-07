@@ -22,7 +22,7 @@ namespace Owlgram.GameRoles
             
         }
 
-        public Mouse(string name, string password, string geo ="", string photo="")
+        public Mouse(string name, string password, string geo = "", string photo = "")
         {
             Name = name;
             Photo = photo;
@@ -35,6 +35,7 @@ namespace Owlgram.GameRoles
 
             notifier = new BaseNotifierDecorator(notifier);
         }
+
         //метод смерти
         public void IsDead()
         {
@@ -87,6 +88,7 @@ namespace Owlgram.GameRoles
         {
             notifier = new ViberDecorator(notifier);
         }
+
         public void AddWhatsAppNotification()
         {
             notifier = new WhatsAppDecorator(notifier);
