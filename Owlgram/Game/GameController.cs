@@ -14,9 +14,46 @@ namespace Owlgram.Game
 
         static int NUMBER_UNLIKED_POSTS_TO_EAT_MOUSE = 3;
         public List<User> Users = new List<User>();
-        private Timer timerOwlNonEating= new Timer(30000.0);//30 seconds
+        private Timer timerOwlNonEating = new Timer(30000.0);//30 seconds
         private Timer timerOwlNonPosting = new Timer(30000.0);//30 seconds
         private const int postingAmuletTime = 1;//время сохранения показателей в минутах
+        private delegate void MenuItemCommand(User user = null);
+        private Dictionary<int, MenuItemCommand> MainMenuItems
+        {
+            get => new Dictionary<int, MenuItemCommand>() 
+            {
+                {1, Registrate },
+                {2, UserEnter }
+            };
+        }
+
+        private Dictionary<int, MenuItemCommand> MouseMenuItems
+        {
+
+            get => new Dictionary<int, MenuItemCommand>()
+            {
+                {1, WatchUnlikedPosts },
+                {2, SelectNewOwlToSubscribe },
+                {3, WatchMouseState },
+                {4, AddTelegramNotifications },
+                {5, AddWhatsAppNotifications },
+                {6, AddViberNotifications },
+                {7, AddEmailNotifications },
+                {8, MainMenu },
+            };
+        }
+
+        private Dictionary<int, MenuItemCommand> OwlMenuItems
+        {
+            get => new Dictionary<int, MenuItemCommand>()
+            {
+                {1, PublishThePost },
+                {2, WatchOwlState },
+                {3, Hunt },
+                {4, MainMenu },
+            };
+
+        }
 
         public GameController()
         {
@@ -25,14 +62,11 @@ namespace Owlgram.Game
 
             timerOwlNonPosting.Elapsed += new ElapsedEventHandler(TimerOwlNonPostingPunish);
             timerOwlNonPosting.Start();
-
-            //timerNonPosting.Stop();
-            //timerNonPosting.Dispose();
         }
-
+        #region Timers
         private void TimerOwlNonPostingPunish(object sender, ElapsedEventArgs e)
         {
-            foreach(User user in Users)
+            foreach (User user in Users)
             {
                 if (user is Owl owl)
                 {
@@ -66,44 +100,42 @@ namespace Owlgram.Game
                 }
             }
         }
+        #endregion
+        private void TryExecute(Dictionary<int, MenuItemCommand> menuItems, User user = null)
+        {
+            while (true)
+            {
+                string response = Console.ReadLine();
+                int itemNum;
+                int.TryParse(response, out itemNum);
+
+                if (!MouseMenuItems.Keys.Contains(itemNum))
+                {
+                    Console.WriteLine("No such menu item");
+                    continue;
+                }
+
+                menuItems[itemNum](user);
+            }
+        }
 
         public void StartGame()
         {
             MainMenu();
         }
 
-        private void MainMenu()
+        #region MainMenu
+        private void MainMenu(User noUser = null)
         {
             Console.WriteLine("Select the action:");
             Console.WriteLine("1: Registration");
             if (Users.Count > 0)
                 Console.WriteLine("2: Login");
 
-            string response = Console.ReadLine();
-            int itemNum = 0;
-
-            if (itemNum > 2 && !int.TryParse(response, out itemNum))
-            {
-                Console.WriteLine("No such menu item");
-                MainMenu();
-                return;
-            }
-
-            switch (itemNum)
-            {
-                case 1:
-                    Registration();
-                    break;
-                case 2:
-                    UserEnter();
-                    break;
-                default:
-                    Console.WriteLine("No such menu item");
-                    break;
-            }
+            TryExecute(MainMenuItems);
         }
 
-        private void UserEnter()
+        private void UserEnter(User noUser)
         {
             Console.WriteLine("Name:");
             string name = Console.ReadLine();
@@ -124,62 +156,65 @@ namespace Owlgram.Game
                 MouseMenu((Mouse)user);
         }
 
-        private void Registration()
+        private void Registrate(User noUser = null)
         {
-            Console.WriteLine("name:");
+            Console.WriteLine("Name:");
             string name = Console.ReadLine();
 
-            foreach(User user in Users)
+            foreach (User user in Users)
             {
-                if(user.Name == name)
+                if (user.Name == name)
                 {
                     Console.WriteLine("This name already taken :(");
-                    Registration();
+                    Registrate();
                     return;
                 }
             }
-            Console.WriteLine("password:");
+            Console.WriteLine("Password:");
             string pas = Console.ReadLine();
-            Console.WriteLine("photo:");
+            Console.WriteLine("Photo:");
             string photo = Console.ReadLine();
-            Console.WriteLine("geo:");
+            Console.WriteLine("Geo:");
             string geo = Console.ReadLine();
 
-            Random rnd = new Random();
+            Random rnd = new Random(DateTime.Now.Second);
             if (Users.Count == 1)
             {
                 if (Users[0] is Mouse)
                 {
-                    Owl owl = new Owl(name, pas, photo, geo);
-                    Users.Add(owl);
-                    OwlMenu(owl);
+                    RegisterNewOwl(name, pas, photo, geo);
                     return;
                 }
                 else
                 {
-                    Mouse mouse = new Mouse(name, pas, photo, geo);
-                    Users.Add(mouse);
-                    MouseMenu(mouse);
+                    RegisterNewMouse(name, pas, photo, geo);
                     return;
                 }
             }
             if (rnd.Next(1, 3) == 1)
-            {
-                Owl owl = new Owl(name, pas, photo, geo);
-                Users.Add(owl);
-                OwlMenu(owl);
-            }
+                RegisterNewOwl(name, pas, photo, geo);
             else
-            {
-                Mouse mouse = new Mouse(name, pas, photo, geo);
-                Users.Add(mouse);
-                MouseMenu(mouse);
-            }
+                RegisterNewMouse(name, pas, photo, geo);
+
             return;
         }
 
-        #region OwlMenu
+        private void RegisterNewOwl(string name, string password, string photo, string geo)
+        {
+            Owl owl = new Owl(name, password, photo, geo);
+            Users.Add(owl);
+            OwlMenu(owl);
+        }
 
+        private void RegisterNewMouse(string name, string password, string photo, string geo)
+        {
+            Mouse mouse = new Mouse(name, password, photo, geo);
+            Users.Add(mouse);
+            MouseMenu(mouse);
+        }
+        #endregion
+
+        #region OwlMenu
         private void OwlMenu(Owl owl)
         {
             Console.WriteLine($"\nYou're owl: {owl.Name}\n  Glad to see you!\n  So you can:");
@@ -188,86 +223,59 @@ namespace Owlgram.Game
             Console.WriteLine("3: Hunt!");
             Console.WriteLine("4: Logout");
 
-            while (true)
+            TryExecute(OwlMenuItems, owl);
+        }
+
+        private void WatchOwlState(User user)
+        {
+            if (user is Owl owl)
             {
-                string response = Console.ReadLine();
-                int itemNum = 0;
+                Console.WriteLine("Your states below:");
+                Console.WriteLine($"    Happiness: {owl.Happiness}");
+                Console.WriteLine($"    Satiety: {owl.Satiety}");
+                Console.WriteLine($"    Eaten mice count: {owl.EatenMiceCount}");
+            }
+            else
+                return;
+        }
 
-                if (itemNum > 4 && !int.TryParse(response, out itemNum))
+        private void Hunt(User user) //охота
+        {
+            if (user is Owl owl)
+            {
+                Console.WriteLine("Let's check your targets!");
+                List<Mouse> eatenMice = owl.Hunt(NUMBER_UNLIKED_POSTS_TO_EAT_MOUSE);
+
+                foreach (Mouse mouse in eatenMice)
                 {
-                    Console.WriteLine("No such menu item");
-                    continue;
+                    Console.WriteLine($"    {mouse.Name} was eaten");
+                    Users.RemoveAll(x => x == mouse && x is Mouse);
                 }
 
-                switch (itemNum)
-                {
-                    case 1:
-                        PublishThePost(owl);
-                        break;
-                    case 2:
-                        WatchOwlState(owl);
-                        break;
-                    case 3:
-                        Hunt(owl);
-                        break;
-                    case 4:
-                        MainMenu();
-                        break;
-                    default:
-                        Console.WriteLine("No such menu item");
-                        break;
-                }
+                Console.WriteLine($"{eatenMice.Count} mouses was eaten");
+                Console.WriteLine($"Score is {owl.EatenMiceCount}");
+
+                OwlMenu(owl);
             }
         }
 
-        private void WatchOwlState(Owl owl)
+        private void PublishThePost(User user)
         {
-            Console.WriteLine("Your states below:");
-            Console.WriteLine($"    Happiness: {owl.Happiness}");
-            Console.WriteLine($"    Satiety: {owl.Satiety}");
-            Console.WriteLine($"    Eaten mice count: {owl.EatenMiceCount}");
-        }
-
-        private void Hunt(Owl owl) //охота
-        {
-            Console.WriteLine("Let's check your targets!");
-            List<Mouse> pretendentsToEat = owl.Observers;
-
-            for (int i = 0; i < NUMBER_UNLIKED_POSTS_TO_EAT_MOUSE; i++)
+            if (user is Owl owl)
             {
-                foreach (Post post in owl.PublishedPosts)
-                {
-                    pretendentsToEat.Except(post.LikedMouses);
-                }
+                Console.WriteLine("Enter the post data");
+                Console.WriteLine("Text:");
+                string text = Console.ReadLine();
+                Console.WriteLine("Photo:");
+                string photo = Console.ReadLine();
+                Console.WriteLine("Geo:");
+                string geo = Console.ReadLine();
+
+                //сделать нотификацию
+                owl.Uh(new Post(owl, text, geo, photo));
+
+                OwlMenu(owl);
             }
-
-            foreach (Mouse mouse in pretendentsToEat)
-            {
-                owl.EatMouse(mouse);
-                Console.WriteLine($"    {mouse.Name} was eaten");
-                Users.RemoveAll(x => x == mouse && x is Mouse);
-            }
-
-            Console.WriteLine($"{pretendentsToEat.Count} mouses was eaten");
-            Console.WriteLine($"Score is {owl.EatenMiceCount}");
-
-            OwlMenu(owl);
-        }
-
-        private void PublishThePost(Owl owl)
-        {
-            Console.WriteLine("Enter the post data");
-            Console.WriteLine("Text:");
-            string text = Console.ReadLine();
-            Console.WriteLine("Photo:");
-            string photo = Console.ReadLine();
-            Console.WriteLine("Geo:");
-            string geo = Console.ReadLine();
-
-            //сделать нотификацию
-            owl.Uh(new Post(owl, text, geo, photo));
-
-            OwlMenu(owl);
         }
         #endregion
 
@@ -284,173 +292,141 @@ namespace Owlgram.Game
             Console.WriteLine("7: Add Email notifications");
             Console.WriteLine("8: Logout");
 
-            while (true)
-            {
-                string response = Console.ReadLine();
-                int itemNum = 0;
-
-                if (itemNum > 8 && !int.TryParse(response, out itemNum))
-                {
-                    Console.WriteLine("No such menu item");
-                    MouseMenu(mouse);
-                    return;
-                }
-
-                switch (itemNum)
-                {
-                    case 1:
-                        WatchUnlikedPosts(mouse);
-                        break;
-                    case 2:
-                        SelectNewOwlToSubscribe(mouse);
-                        break;
-                    case 3:
-                        WatchMouseState(mouse);
-                        break;
-                    case 4:
-                        AddTelegramNotifications(mouse);
-                        break;
-                    case 5:
-                        AddWhatsAppNotifications(mouse);
-                        break;
-                    case 6:
-                        AddViberNotifications(mouse);
-                        break;
-                    case 7:
-                        AddEmailNotifications(mouse);
-                        break;
-                    case 8:
-                        MainMenu();
-                        break;
-                    default:
-                        Console.WriteLine("No such menu item");
-                        break;
-                }
-            }
+            TryExecute(MouseMenuItems, mouse);
         }
-
-        private void WatchMouseState(Mouse mouse)
+        
+        private void WatchMouseState(User user)
         {
+            Mouse mouse = (Mouse)user;
             Console.WriteLine("Your states below:");
             Console.WriteLine($"    Life time (minutes): {mouse.LifeTimeFromMinutes}");
             Console.WriteLine($"    Count of liked posts: {mouse.LikedPostsCount}");
         }
 
-        private void SelectNewOwlToSubscribe(Mouse mouse)
+        private void SelectNewOwlToSubscribe(User user)
         {
-            List<User> owls = Users.Where(u => u is Owl).ToList();
-
-            List<Owl> notSubscriptionOwls = new List<Owl>();
-            foreach(User userOwl in owls)
+            if (user is Mouse mouse)
             {
-                if (!mouse.Subscriptions.Contains((Owl)userOwl))
-                    notSubscriptionOwls.Add((Owl)userOwl);
-            }
+                List<User> owls = Users.Where(u => u is Owl).ToList();
 
-            if(notSubscriptionOwls.Count == 0)
-            {
-                Console.WriteLine("No owl for subscribe :(");
-                return;
-            }
-
-            Console.WriteLine("Enter the id of owl to subscribe: ");
-
-            for (int i = 0; i < owls.Count; i++)
-            {
-                Console.WriteLine($"{i+1}: {owls[i].Name}");
-            }
-
-            string response = Console.ReadLine();
-            int itemNum = 0;
-
-            if (itemNum > owls.Count() && !int.TryParse(response, out itemNum))
-            {
-                Console.WriteLine("No such owl");
-                SelectNewOwlToSubscribe(mouse);
-                return;
-            }
-
-            //((Owl)owls[itemNum-1]).RegisterObserver(mouse);
-            mouse.Subscribe(((Owl)owls[itemNum - 1]));
-            Console.WriteLine($"You're subscribed to {((Owl)owls[itemNum - 1]).Name}");
-
-            MouseMenu(mouse);
-        }
-
-        private void WatchUnlikedPosts(Mouse mouse)
-        {
-            List<Post> unlikedPosts = new List<Post>();
-            foreach (Owl owl in mouse.Subscriptions)
-            {
-                foreach (Post post in owl.PublishedPosts)
+                List<Owl> notSubscriptionOwls = new List<Owl>();
+                foreach (User userOwl in owls)
                 {
-                    if (!post.LikedMouses.Contains(mouse))
-                    {
-                        unlikedPosts.Add(post);
-                    }
+                    if (!mouse.Subscriptions.Contains((Owl)userOwl))
+                        notSubscriptionOwls.Add((Owl)userOwl);
                 }
-            }
 
-            if(unlikedPosts.Count == 0)
-            {
-                Console.WriteLine("Good game. No unliked posts :)");
-                return;
-            }
-
-            for (int i = 0; i < unlikedPosts.Count; i++)
-            {
-                Console.Write($"{i + 1}:    ");
-                Console.WriteLine($"Text: {unlikedPosts[i].Text}  Photo: {unlikedPosts[i].Photo}  Geo: {unlikedPosts[i].Geo}");
-            }
-
-            Console.WriteLine("Enter the");
-            Console.WriteLine("'id' to like the post");
-            Console.WriteLine("'exit' to exit");
-
-            while (true)
-            {
-                string response = Console.ReadLine();
-                int itemNum = 0;
-
-                if (response == "exit")
+                if (notSubscriptionOwls.Count == 0)
                 {
-                    MouseMenu(mouse);
+                    Console.WriteLine("No owl for subscribe :(");
                     return;
                 }
 
-                if (itemNum > unlikedPosts.Count() && !int.TryParse(response, out itemNum))
+                Console.WriteLine("Enter the id of owl to subscribe: ");
+
+                for (int i = 0; i < notSubscriptionOwls.Count; i++)
                 {
-                    Console.WriteLine("No such post");
-                    continue;
+                    Console.WriteLine($"{i + 1}: {notSubscriptionOwls[i].Name}");
+                }
+
+                string response = Console.ReadLine();
+                int itemNum = 0;
+
+                if (itemNum > notSubscriptionOwls.Count() || !int.TryParse(response, out itemNum))
+                {
+                    Console.WriteLine("No such owl");
+                    SelectNewOwlToSubscribe(mouse);
+                    return;
                 }
                 itemNum--;
-                mouse.Like(unlikedPosts[itemNum]);
+
+                //((Owl)owls[itemNum-1]).RegisterObserver(mouse);
+                mouse.Subscribe(((Owl)owls[itemNum]));
+                Console.WriteLine($"You're subscribed to {((Owl)owls[itemNum]).Name}");
+
                 MouseMenu(mouse);
-                return;
             }
         }
 
-        public void AddEmailNotifications(Mouse mouse)
+        private void WatchUnlikedPosts(User user)
+        {
+            if (user is Mouse mouse)
+            {
+                List<Post> unlikedPosts = new List<Post>();
+                foreach (Owl owl in mouse.Subscriptions)
+                {
+                    foreach (Post post in owl.PublishedPosts)
+                    {
+                        if (!post.LikedMouses.Contains(mouse))
+                        {
+                            unlikedPosts.Add(post);
+                        }
+                    }
+                }
+
+                if (unlikedPosts.Count == 0)
+                {
+                    Console.WriteLine("Good game. No unliked posts :)");
+                    return;
+                }
+
+                for (int i = 0; i < unlikedPosts.Count; i++)
+                {
+                    Console.Write($"{i + 1}:    ");
+                    Console.WriteLine($"Text: {unlikedPosts[i].Text}  Photo: {unlikedPosts[i].Photo}  Geo: {unlikedPosts[i].Geo}");
+                }
+
+                Console.WriteLine("Enter the");
+                Console.WriteLine("'id' to like the post");
+                Console.WriteLine("'exit' to exit");
+
+                while (true)
+                {
+                    string response = Console.ReadLine();
+
+                    if (response == "exit")
+                    {
+                        MouseMenu(mouse);
+                        return;
+                    }
+
+                    int itemNum;
+                    int.TryParse(response, out itemNum);
+
+                    if (itemNum > unlikedPosts.Count())
+                    {
+                        Console.WriteLine("No such post :(");
+                        continue;
+                    }
+                    itemNum--;
+                    mouse.Like(unlikedPosts[itemNum]);
+                    MouseMenu(mouse);
+                    return;
+                }
+            }
+        }
+
+        public void AddEmailNotifications(User user)
         {
             Console.WriteLine("Email notifications was added");
-            mouse.AddEmailNotification();
+            ((Mouse)user).AddEmailNotification();
         }
 
-        public void AddTelegramNotifications(Mouse mouse)
+        public void AddTelegramNotifications(User user)
         {
             Console.WriteLine("Telegram notifications was added");
-            mouse.AddTelegramNotification();
+            ((Mouse)user).AddTelegramNotification();
         }
 
-        public void AddViberNotifications(Mouse mouse)
+        public void AddViberNotifications(User user)
         {
             Console.WriteLine("Viber notifications was added");
-            mouse.AddViberNotification();
+            ((Mouse)user).AddViberNotification();
         }
-        public void AddWhatsAppNotifications(Mouse mouse)
+        public void AddWhatsAppNotifications(User user)
         {
             Console.WriteLine("WhatsApp notifications was added");
-            mouse.AddWhatsAppNotification();
+            ((Mouse)user).AddWhatsAppNotification();
         }
         #endregion
     }

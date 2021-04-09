@@ -14,8 +14,6 @@ namespace Owlgram.GameRoles
         public int EatenMiceCount { get; private set; }
         public DateTime TimeOfLastPost { get; private set; }
         public List<Mouse> Observers { get; private set; }
-        //public DateTime? DeadDate { get; private set; }
-        //public DateTime CreateDate { get; private set; }
         public List<Post> PublishedPosts { get; private set; }
         public bool IsLive { get; private set; }
         
@@ -55,6 +53,23 @@ namespace Owlgram.GameRoles
             IsLive = false;
         }
 
+        public List<Mouse> Hunt(int numberUnlikedPostsToEatMouse)
+        {
+            List<Mouse> pretendentsToEat = this.Observers;
+
+            for (int i = 0; i < numberUnlikedPostsToEatMouse; i++)
+            {
+                foreach (Post post in this.PublishedPosts)
+                {
+                    pretendentsToEat.Except(post.LikedMouses);
+                }
+            }
+            foreach (Mouse mouse in pretendentsToEat)
+            {
+                this.EatMouse(mouse);
+            }
+            return pretendentsToEat;
+        }
         public void EatMouse(Mouse mouse)
         {
             mouse.IsDead();
