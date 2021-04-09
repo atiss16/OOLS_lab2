@@ -12,9 +12,15 @@ namespace Owlgram.GameRoles
         public string Photo { get; set; }
         public string Geo { get; set; }
         public string Password { get; set; }
+        public bool IsLive { get; set; }
         public User()
         {
 
+        }
+
+        public virtual void Dead()
+        {
+            IsLive = false;
         }
     }
 }

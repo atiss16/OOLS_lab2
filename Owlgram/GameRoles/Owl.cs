@@ -15,7 +15,6 @@ namespace Owlgram.GameRoles
         public DateTime TimeOfLastPost { get; private set; }
         public List<Mouse> Observers { get; private set; }
         public List<Post> PublishedPosts { get; private set; }
-        public bool IsLive { get; private set; }
         
         public Owl()
         {
@@ -47,12 +46,12 @@ namespace Owlgram.GameRoles
             foreach (IObserver observer in Observers)
                 this.NotifyObserver(observer, post);
         }
-
-        public void Dead()
-        {
-            IsLive = false;
-        }
-
+        /// <summary>
+        /// Метод охоты.
+        /// </summary>
+        /// <param name="numberUnlikedPostsToEatMouse">Необходимое количество постов, 
+        /// которое не пролайкала мышь, чтобы ее съесть</param>
+        /// <returns>Список съеденных мышей</returns>
         public List<Mouse> Hunt(int numberUnlikedPostsToEatMouse)
         {
             List<Mouse> pretendentsToEat = this.Observers;
@@ -72,7 +71,7 @@ namespace Owlgram.GameRoles
         }
         public void EatMouse(Mouse mouse)
         {
-            mouse.IsDead();
+            mouse.Dead();
             Satiety += 10;
             EatenMiceCount++;
         }

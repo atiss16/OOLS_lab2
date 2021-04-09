@@ -16,13 +16,13 @@ namespace Owlgram.Game
         public List<User> Users = new List<User>();
         private Timer timerOwlNonEating = new Timer(30000.0);//30 seconds
         private Timer timerOwlNonPosting = new Timer(30000.0);//30 seconds
-        private const int postingAmuletTime = 1;//время сохранения показателей в минутах
+        private const int POSTING_IMMUNITY_TIME = 1;//время сохранения показателей в исходном состоянии после публикации поста в минутах
         private delegate void MenuItemCommand(User user = null);
         private Dictionary<int, MenuItemCommand> MainMenuItems
         {
             get => new Dictionary<int, MenuItemCommand>() 
             {
-                {1, Registrate },
+                {1, Register },
                 {2, UserEnter }
             };
         }
@@ -70,17 +70,13 @@ namespace Owlgram.Game
             {
                 if (user is Owl owl)
                 {
-                    if ((DateTime.Now - owl.TimeOfLastPost).Minutes < postingAmuletTime)
+                    if ((DateTime.Now - owl.TimeOfLastPost).Minutes < POSTING_IMMUNITY_TIME)
                     {
                         return;
                     }
 
                     owl.NonPostingPunish();
-                    if (!owl.IsLive)
-                    {
-                        Console.WriteLine($"Owl {owl.Name} is dead");
-                        Users.RemoveAll(o => o == owl);
-                    }
+                    DisplayIfOwlIsDeadInfo(owl);
                 }
             }
         }
@@ -92,12 +88,16 @@ namespace Owlgram.Game
                 if (user is Owl owl)
                 {
                     owl.NonEatingPunish();
-                    if (!owl.IsLive)
-                    {
-                        Console.WriteLine($"Owl {owl.Name} is dead");
-                        Users.RemoveAll(o => o == owl);
-                    }
+                    DisplayIfOwlIsDeadInfo(owl);
                 }
+            }
+        }
+        private void DisplayIfOwlIsDeadInfo(Owl owl)
+        {
+            if (!owl.IsLive)
+            {
+                Console.WriteLine($"Owl '{owl.Name}' is dead");
+                Users.RemoveAll(o => o == owl);
             }
         }
         #endregion
@@ -156,7 +156,7 @@ namespace Owlgram.Game
                 MouseMenu((Mouse)user);
         }
 
-        private void Registrate(User noUser = null)
+        private void Register(User noUser = null)
         {
             Console.WriteLine("Name:");
             string name = Console.ReadLine();
@@ -166,7 +166,7 @@ namespace Owlgram.Game
                 if (user.Name == name)
                 {
                     Console.WriteLine("This name already taken :(");
-                    Registrate();
+                    Register();
                     return;
                 }
             }
@@ -217,7 +217,7 @@ namespace Owlgram.Game
         #region OwlMenu
         private void OwlMenu(Owl owl)
         {
-            Console.WriteLine($"\nYou're owl: {owl.Name}\n  Glad to see you!\n  So you can:");
+            Console.WriteLine($"\nYou're owl: '{owl.Name}'\n  Glad to see you!\n  So you can:");
             Console.WriteLine("1: Publish the post");
             Console.WriteLine("2: Watch your state");
             Console.WriteLine("3: Hunt!");
@@ -248,7 +248,7 @@ namespace Owlgram.Game
 
                 foreach (Mouse mouse in eatenMice)
                 {
-                    Console.WriteLine($"    {mouse.Name} was eaten");
+                    Console.WriteLine($"    '{mouse.Name}' was eaten");
                     Users.RemoveAll(x => x == mouse && x is Mouse);
                 }
 
@@ -271,7 +271,6 @@ namespace Owlgram.Game
                 Console.WriteLine("Geo:");
                 string geo = Console.ReadLine();
 
-                //сделать нотификацию
                 owl.Uh(new Post(owl, text, geo, photo));
 
                 OwlMenu(owl);
@@ -282,7 +281,7 @@ namespace Owlgram.Game
         #region MouseMenu
         private void MouseMenu(Mouse mouse)
         {
-            Console.WriteLine($"\nYou're mouse: {mouse.Name}\n  Glad to see you!\n  So you can:");
+            Console.WriteLine($"\nYou're mouse: '{mouse.Name}'\n  Glad to see you!\n  So you can:");
             Console.WriteLine("1: Watch unliked posts");
             Console.WriteLine("2: Subscribe to new owl");
             Console.WriteLine("3: Watch the state");
@@ -342,7 +341,7 @@ namespace Owlgram.Game
 
                 //((Owl)owls[itemNum-1]).RegisterObserver(mouse);
                 mouse.Subscribe(((Owl)owls[itemNum]));
-                Console.WriteLine($"You're subscribed to {((Owl)owls[itemNum]).Name}");
+                Console.WriteLine($"You're subscribed to '{((Owl)owls[itemNum]).Name}'");
 
                 MouseMenu(mouse);
             }
@@ -396,6 +395,7 @@ namespace Owlgram.Game
                     if (itemNum > unlikedPosts.Count())
                     {
                         Console.WriteLine("No such post :(");
+                        Console.WriteLine("Enter the right command");
                         continue;
                     }
                     itemNum--;

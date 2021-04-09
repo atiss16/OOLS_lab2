@@ -18,7 +18,7 @@ namespace Owlgram.Decorator
         }
         public override void Send(Post post, Mouse mouse)
         {
-            Console.WriteLine(mouse.Name + " уведомлена");
+            Console.WriteLine($"'{mouse.Name}' уведомлена");
         }
     }
 }

@@ -15,7 +15,6 @@ namespace Owlgram.GameRoles
         public int LikedPostsCount;
         public List<Owl> Subscriptions { get; private set; } = new List<Owl>();
         private Notifier notifier;
-        bool isLive;
 
         public Mouse()
         {
@@ -31,15 +30,15 @@ namespace Owlgram.GameRoles
 
             CreateDate = DateTime.UtcNow;
             DeadDate = null;
-            isLive = true;
+            IsLive = true;
 
             notifier = new BaseNotifierDecorator(notifier);
         }
 
         //метод смерти
-        public void IsDead()
+        public override void Dead()
         {
-            isLive = false;
+            IsLive = false;
             DeadDate = DateTime.UtcNow;
         }
 
