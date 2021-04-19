@@ -40,6 +40,8 @@ namespace Owlgram.GameRoles
         {
             IsLive = false;
             DeadDate = DateTime.UtcNow;
+            foreach (Owl owl in Subscriptions)
+                owl.RemoveObserver(this);
         }
 
         //получение времени жизни
@@ -59,6 +61,13 @@ namespace Owlgram.GameRoles
         {
             Subscriptions.Add(owl);
             owl.RegisterObserver(this);
+        }
+
+        //метод подписки на сову
+        public void Unsubscribe(Owl owl)
+        {
+            Subscriptions.Remove(owl);
+            owl.RemoveObserver(this);
         }
 
         //метод лайка поста

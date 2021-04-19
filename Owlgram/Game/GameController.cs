@@ -79,7 +79,7 @@ namespace Owlgram.Game
             if (!owl.IsLive)
             {
                 Console.WriteLine($"Owl '{owl.Name}' is dead");
-                Users.RemoveAll(o => o == owl);
+                Users.Remove(owl);
             }
         }
         #endregion
@@ -285,7 +285,7 @@ namespace Owlgram.Game
                     Console.WriteLine("No owl for subscribe :(");
                     return;
                 }
-
+                Console.WriteLine("Enter the 'exit' to exit");
                 Console.WriteLine("Enter the id of owl to subscribe: ");
 
                 for (int i = 0; i < notSubscriptionOwls.Count; i++)
@@ -294,11 +294,17 @@ namespace Owlgram.Game
                 }
 
                 string response = Console.ReadLine();
-                int itemNum = 0;
+                int itemNum;
 
-                if (itemNum > notSubscriptionOwls.Count() || !int.TryParse(response, out itemNum))
+                if (response == "exit")
                 {
-                    Console.WriteLine("No such owl");
+                    MouseMenu(mouse);
+                    return;
+                }
+
+                if (!int.TryParse(response, out itemNum) || itemNum < 1 || itemNum > notSubscriptionOwls.Count())
+                {
+                    Console.WriteLine("No such owl\n");
                     SelectNewOwlToSubscribe(mouse);
                     return;
                 }
@@ -347,12 +353,14 @@ namespace Owlgram.Game
                         return;
                     }
 
-                    if (!int.TryParse(response, out var itemNum) || itemNum > unlikedPosts.Count())
+                    if (!int.TryParse(response, out var itemNum) || itemNum < 1 || itemNum > unlikedPosts.Count())
                     {
                         Console.WriteLine("No such post :(");
                         Console.WriteLine("Enter the right command");
                         continue;
                     }
+
+                    Console.WriteLine($"You're liked the post number {itemNum}");
 
                     itemNum--;
                     mouse.Like(unlikedPosts[itemNum]);

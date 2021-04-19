@@ -55,7 +55,7 @@ namespace Owlgram.GameRoles
         public List<Mouse> Hunt(int numberUnlikedPostsToEatMouse)
         {
             List<Mouse> subscribers = this.Observers;
-            List<Mouse> pretendentsToEat = new List<Mouse>();
+            List<Mouse> eatenMouses = new List<Mouse>();
             Dictionary<Mouse, int> MouseLikedPostsCount = new Dictionary<Mouse, int>();
 
             foreach(Mouse mouse in subscribers)
@@ -67,7 +67,8 @@ namespace Owlgram.GameRoles
             {
                 foreach (Mouse mouse in post.LikedMouses)
                 {
-                    MouseLikedPostsCount[mouse]++;
+                    if(MouseLikedPostsCount.ContainsKey(mouse))
+                        MouseLikedPostsCount[mouse]++;
                 }
             }
 
@@ -76,12 +77,15 @@ namespace Owlgram.GameRoles
                 int mouseUnlikedPostsCount = this.PublishedPosts.Count - MouseLikedPostsCount[mouse];
                 if (mouseUnlikedPostsCount >= numberUnlikedPostsToEatMouse)
                 {
-                    this.EatMouse(mouse);
-                    pretendentsToEat.Add(mouse);
+                    if (mouse.IsLive)
+                    {
+                        this.EatMouse(mouse);
+                        eatenMouses.Add(mouse);
+                    }
                 }
             }
 
-            return pretendentsToEat;
+            return eatenMouses;
 
             //List<Mouse> pretendentsToEat = this.Observers;
 
@@ -127,7 +131,12 @@ namespace Owlgram.GameRoles
             else
                 Satiety -= 10;
         }
-
+        public override void Dead()
+        {
+            IsLive = false;
+            foreach (Mouse mouse in Observers)
+                mouse.Unsubscribe(this);
+        }
         public void RegisterObserver(IObserver observer)
         {
             Observers.Add((Mouse)observer);
