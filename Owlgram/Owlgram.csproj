@@ -54,6 +54,7 @@
     <Compile Include="GameRoles\Mouse.cs" />
     <Compile Include="GameRoles\Owl.cs" />
     <Compile Include="GameRoles\User.cs" />
+    <Compile Include="Game\MenuItem.cs" />
     <Compile Include="Observable\IObserver.cs" />
     <Compile Include="Observable\IPublisher.cs" />
     <Compile Include="Program.cs" />

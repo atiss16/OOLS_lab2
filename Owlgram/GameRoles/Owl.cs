@@ -54,21 +54,51 @@ namespace Owlgram.GameRoles
         /// <returns>Список съеденных мышей</returns>
         public List<Mouse> Hunt(int numberUnlikedPostsToEatMouse)
         {
-            List<Mouse> pretendentsToEat = this.Observers;
+            List<Mouse> subscribers = this.Observers;
+            List<Mouse> pretendentsToEat = new List<Mouse>();
+            Dictionary<Mouse, int> MouseLikedPostsCount = new Dictionary<Mouse, int>();
 
-            for (int i = 0; i < numberUnlikedPostsToEatMouse; i++)
+            foreach(Mouse mouse in subscribers)
             {
-                foreach (Post post in this.PublishedPosts)
+                MouseLikedPostsCount.Add(mouse, 0);
+            }
+
+            foreach (Post post in this.PublishedPosts)
+            {
+                foreach (Mouse mouse in post.LikedMouses)
                 {
-                    pretendentsToEat.Except(post.LikedMouses);
+                    MouseLikedPostsCount[mouse]++;
                 }
             }
-            foreach (Mouse mouse in pretendentsToEat)
+
+            foreach (Mouse mouse in MouseLikedPostsCount.Keys)
             {
-                this.EatMouse(mouse);
+                int mouseUnlikedPostsCount = this.PublishedPosts.Count - MouseLikedPostsCount[mouse];
+                if (mouseUnlikedPostsCount >= numberUnlikedPostsToEatMouse)
+                {
+                    this.EatMouse(mouse);
+                    pretendentsToEat.Add(mouse);
+                }
             }
+
             return pretendentsToEat;
+
+            //List<Mouse> pretendentsToEat = this.Observers;
+
+            //for (int i = 0; i < numberUnlikedPostsToEatMouse; i++)
+            //{
+            //    foreach (Post post in this.PublishedPosts)
+            //    {
+            //        pretendentsToEat.Except(post.LikedMouses);
+            //    }
+            //}
+            //foreach (Mouse mouse in pretendentsToEat)
+            //{
+            //    this.EatMouse(mouse);
+            //}
+            //return pretendentsToEat;
         }
+
         public void EatMouse(Mouse mouse)
         {
             mouse.Dead();
